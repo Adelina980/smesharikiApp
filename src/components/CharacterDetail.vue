@@ -1,23 +1,31 @@
 <template>
   <div class="character-detail-container">
-    <h2>Информация о персонаже</h2>
-    <div v-if="character" class="character-detail">
-      <div class="character-image">
-        <img :src="getCharacterImage(character.name)" :alt="`${character.name}`">
+    <div v-if="isValidId">
+      <h2>Информация о персонаже</h2>
+      <div v-if="character" class="character-detail">
+        <div class="character-image">
+          <img :src="getCharacterImage(character.name)" :alt="`${character.name}`">
+        </div>
+        <div class="character-info">
+          <h3>{{ character.name }}</h3>
+          <p><strong>Описание:</strong> {{ character.description }}</p>
+        </div>
       </div>
-      <div class="character-info">
-        <h3>{{ character.name }}</h3>
-        <p><strong>Описание:</strong> {{ character.description }}</p>
-      </div>
+    </div>
+    <div v-else>
+      <NotFoundPage/>
     </div>
   </div>
 </template>
 
 <script>
 import characters from '../data/characters.js';
+import NotFoundPage from "@/components/NotFoundPage.vue";
 
 export default {
   name: 'CharacterDetail',
+  components: {NotFoundPage},
+
   props: ['id'],
   data() {
     return {
@@ -30,8 +38,15 @@ export default {
     },
   },
   computed: {
+    isValidId() {
+      const id = parseInt(this.id, 10);
+      return id >= 1 && id <= 9;
+    },
     character() {
-      return this.characters[this.id - 1];
+      if (this.isValidId) {
+        return characters.find(c => c.id === parseInt(this.id, 10));
+      }
+      return null;
     },
   },
 };
