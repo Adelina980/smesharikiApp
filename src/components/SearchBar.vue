@@ -5,7 +5,7 @@
           v-model="searchQuery"
           @input="handleInput"
           @focus="handleFocus"
-          @blur="handleFocus"
+          @blur="handleBlur"
           type="text"
           placeholder="Поиск персонажей..."
           class="search-input"
@@ -14,7 +14,7 @@
       <select v-model="sortOrder" class="sort-select"
               @change="handleSortChange"
               @focus="handleFocus"
-              @blur="handleFocus">
+              @blur="handleBlur">
 
         <option value="asc">По имени (А-Я)</option>
         <option value="desc">По имени (Я-А)</option>
@@ -74,11 +74,18 @@ export default {
       this.searchQuery = "";
     },
     handleFocus() {
-      setTimeout(() => {
-            if (this.searchQuery.trim() !== "") {
-              this.showResults = !this.showResults;
-            }
-          }, 100)
+
+      if (this.searchQuery.trim() !== "") {
+        this.showResults = !this.showResults;
+      }
+
+    },
+    handleBlur() {
+      setTimeout(()=>{
+        if (this.searchQuery.trim() !== "") {
+          this.showResults = !this.showResults;
+        }
+      }, 1000)
     }
   },
 
